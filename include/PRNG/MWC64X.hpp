@@ -1,6 +1,6 @@
 // Copyright (c) 2011, David Thomas
 //
-// Copyright(c) 2018 Máté Ferenc Nagy-Egri, Wigner GPU-Laboratory.
+// Copyright(c) 2018 Mï¿½tï¿½ Ferenc Nagy-Egri, Wigner GPU-Laboratory.
 //
 // All rights reserved.
 //
@@ -88,7 +88,8 @@ namespace prng
 
         inline void next_state()
         {
-#ifdef __SYCL_DEVICE_ONLY__
+// it seems that hipSYCL hasn't implemented mad_hi() yet (2022-02-03)
+#if  defined(__SYCL_DEVICE_ONLY__) && !defined(__HIPSYCL__)
             std::uint32_t xn = a * x + c;
             std::uint32_t carry = static_cast<std::uint32_t>(xn < c); // The (Xn<C) will be zero or one for scalar
             std::uint32_t cn = cl::sycl::mad_hi(a, x, carry);
